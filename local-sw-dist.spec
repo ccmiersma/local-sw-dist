@@ -1,4 +1,13 @@
+%define author Christopher Miersma
+%define default_rel_num 0
+Name:		local-base-sw-dist
+#Update the version to track changes to the specfile with major versions
+Version:        0.1.0
 
+#The following parameters can be defined at the command line, but default as below.
+%{!?rel_num:%define rel_num %{default_rel_num}}
+%{!?local_source:%define local_source false}
+%{!?tag:%define tag release-%{version}}
 
 %{!?local_prefix:%define local_prefix local}
 %if "%{local_prefix}" != "false"
@@ -12,33 +21,28 @@
 %define _includedir %{_prefix}/include
 %endif
 
-
-%define author Christopher Miersma
-
-
-%{!?tag:%define tag HEAD}
-%{!?release_num:%define release_num 1}
-%{!?local_source:%define local_source false}
-
-Name:		local-base-sw-dist
-%if "%{tag}" == "HEAD"
-Version:        %(date +"%Y%m%d%H%M")
+#This automatically sets the release to 0 with a date stamped release candidate.
+#Set the release number to 1 or higher by defining rel_num.
+%if "%{1?rel_num}" == "%{default_rel_num}"
+Release:        %{rel_num}rc%(date +"%Y%m%d%H%M")%{?dist}
 %else
-Version:        %{tag}
+Release:        %{rel_num}%{?dist}
 %endif
 
-# Update the release number when you rebuild the same version but only make changes to the spec file.
-Release:        %{release_num}%{?dist}
+
+
+
+
 
 Summary:	Local Base Software Distribution
 Group:		local
-License:	GPL
-URL:		https://github.com/ccmiersma/%{name}/
+License:	MIT
+URL:		https://www.gitlab.com/ccmiersma/%{name}/
 Source0:	%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  pandoc
 
-%define vcsurl https://github.com/ccmiersma/%{name}.git
+%define vcsurl ssh://git@www.gitlab.com:/ccmiersma/%{name}.git
 
 %description
 This package will install the base environment for a custom software distribution.
@@ -51,16 +55,14 @@ and custom applications local to your organization.
 # This section works to grab the source file from the git repository.
 # If you wish to build from a local tar file that you have downloaded or extracted
 # from the SRPM, run rpmbuild with -D 'local_source true'
-#git archive --format tar %{tag} --remote %{vcsurl} | gzip > %{name}-%{version}.tar.gz
+git archive --prefix=%{name}-%{version}/ --format tar %{tag} --remote %{vcsurl} | gzip > ../SOURCES/%{name}-%{version}.tar.gz
 
-tar xvfz %{name}-%{version}.tar.gz
-
-cp %{name}-%{version}.tar.gz ../SOURCES
+%setup
 
 %else
 # local_source is not false, so we build from local SOURCE0
 # By default local_source is false, so we skip this.
-%setup -c
+%setup
 
 %endif
 
@@ -188,5 +190,5 @@ mandb
 mandb
 
 %changelog
-* Thu Jan 19 2017 Christopher Miersma - 1.1.0-1
+* Thu Jan 19 2017 Christopher Miersma - 0.1.0-1
 - Initial Release
