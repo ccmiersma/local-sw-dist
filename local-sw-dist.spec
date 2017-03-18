@@ -1,4 +1,17 @@
+%define author Christopher Miersma
 
+# This defines the target stable release for a given version.
+#Increment it for small packaging changes within a stable release.
+#Reset it to 1, when you begin work on a new version, bugfix etc.
+%define rel_num 1
+Name:		local-sw-dist
+#Update the version to track changes to the specfile with major versions
+Version:        0.1.1
+
+#The following parameters can be defined at the command line, but default as below.
+%{!?rel:%define rel false}
+%{!?local_source:%define local_source false}
+%{!?tag:%define tag release-%{version}}
 
 %{!?local_prefix:%define local_prefix local}
 %if "%{local_prefix}" != "false"
@@ -12,33 +25,25 @@
 %define _includedir %{_prefix}/include
 %endif
 
-
-%define author Christopher Miersma
-
-
-%{!?tag:%define tag HEAD}
-%{!?release_num:%define release_num 1}
-%{!?local_source:%define local_source false}
-
-Name:		local-base-sw-dist
-%if "%{tag}" == "HEAD"
-Version:        %(date +"%Y%m%d%H%M")
+#If this is not specifically defined as a release, the rel_num will be the upcoming release
+#minus 1 with rc and a date stamp. A clean release package for stable release can be defined
+#by passing "-D 'rel true'" If you need to re-release a package because of specfile or other
+#packaging issues, you must update the default rel_num in the specfile.
+%if "%{rel}" == "false"
+Release:        %(echo $((%{rel_num} - 1)))rc%(date +"%Y%m%d%H%M")%{?dist}
 %else
-Version:        %{tag}
+Release:        %{rel_num}%{?dist}
 %endif
 
-# Update the release number when you rebuild the same version but only make changes to the spec file.
-Release:        %{release_num}%{?dist}
-
-Summary:	Local Base Software Distribution
+Summary:	Local Software Distribution
 Group:		local
-License:	GPL
-URL:		https://github.com/ccmiersma/%{name}/
+License:	MIT
+URL:		https://www.gitlab.com/ccmiersma/%{name}/
 Source0:	%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  pandoc
 
-%define vcsurl https://github.com/ccmiersma/%{name}.git
+%define vcsurl ssh://git@www.gitlab.com:/ccmiersma/%{name}.git
 
 %description
 This package will install the base environment for a custom software distribution.
@@ -51,21 +56,20 @@ and custom applications local to your organization.
 # This section works to grab the source file from the git repository.
 # If you wish to build from a local tar file that you have downloaded or extracted
 # from the SRPM, run rpmbuild with -D 'local_source true'
-#git archive --format tar %{tag} --remote %{vcsurl} | gzip > %{name}-%{version}.tar.gz
+rm -rf ./%{name}-%{version}/
+git archive --prefix=%{name}-%{version}/ --format tar %{tag} --remote %{vcsurl} | gzip > %{name}-%{version}.tar.gz
 
 tar xvfz %{name}-%{version}.tar.gz
+mv -f %{name}-%{version}.tar.gz ../SOURCES
 
-cp %{name}-%{version}.tar.gz ../SOURCES
+%setup -T -D
 
 %else
 # local_source is not false, so we build from local SOURCE0
 # By default local_source is false, so we skip this.
-%setup -c
+%setup
 
 %endif
-
-
-
 
 %build
 
@@ -77,15 +81,15 @@ cat > local << EOF
 #
 #The default variables below are the base paths used by other scripts in
 #a local custom software distribution.
-export LOCAL_SW_ROOT=%{_prefix}
-export LOCAL_SW_ETC=/etc/opt/%{local_prefix}
-export LOCAL_SW_VAR=/var/opt/%{local_prefix}
-export LOCAL_SW_SCRIPT_LIBS=%{_libdir}/scripts
+LOCAL_SW_ROOT=%{_prefix}
+LOCAL_SW_ETC=/etc/opt/%{local_prefix}
+LOCAL_SW_VAR=/var/opt/%{local_prefix}
+LOCAL_SW_SCRIPT_LIBS=%{_libdir}/scripts
 
 EOF
 
 
-echo "Building 
+echo "Building..." 
 cat > local.sh << EOF
 #Add local software distribution to PATH and set ENV variables.
 #
@@ -101,15 +105,13 @@ source \${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
 
 EOF
 
-
 echo "Creating man page from README..."
 
 # If a README.md is found, create a man page
 if [ -e "README.md" ]; then
   cat README.md | \
-  sed -e 1i"\% %{name}(7)\n% %{author} \n% $(date +\%B\ \%Y)\n#NAME\n%{name} - %{summary}\n" | \
+  sed -e 1i"\%% %{name}(7)\n\%% %{author} \n\%% $(date +\%B\ \%Y)\n#NAME\n%{name} - %{summary}\n" | \
   pandoc -s -t man - | \
-  sed -e 3d | \
   gzip > %{name}.7.gz
 fi
 
@@ -177,7 +179,6 @@ find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed 
 %config %_sysconfdir/opt/%{local_prefix}/base-sw-dist.conf
 %docdir %{_mandir} 
 
-
 # The post and postun update the man page database
 %post
 
@@ -188,5 +189,5 @@ mandb
 mandb
 
 %changelog
-* Thu Jan 19 2017 Christopher Miersma - 1.1.0-1
+* Thu Jan 19 2017 Christopher Miersma - 0.1.0-1
 - Initial Release
