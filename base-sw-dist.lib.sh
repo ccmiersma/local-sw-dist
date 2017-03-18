@@ -10,6 +10,9 @@ export LOCAL_SW_ROOT=${LOCAL_SW_ROOT:-/opt/local}
 
 case "$1" in
   set)
+    export LOCAL_SW_ETC
+    export LOCAL_SW_VAR
+    export LOCAL_SW_SCRIPT_LIBS
     export PATH=$PATH:$LOCAL_SW_ROOT/bin:$LOCAL_SW_ROOT/sbin
     export MANPATH=:$LOCAL_SW_ROOT/share/man
     export LOCAL_HOSTNAME=$(hostname -s)

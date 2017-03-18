@@ -56,10 +56,11 @@ and custom applications local to your organization.
 # This section works to grab the source file from the git repository.
 # If you wish to build from a local tar file that you have downloaded or extracted
 # from the SRPM, run rpmbuild with -D 'local_source true'
+rm -rf ./%{name}-%{version}/
 git archive --prefix=%{name}-%{version}/ --format tar %{tag} --remote %{vcsurl} | gzip > %{name}-%{version}.tar.gz
 
 tar xvfz %{name}-%{version}.tar.gz
-cp %{name}-%{version}.tar.gz ../SOURCES
+mv -f %{name}-%{version}.tar.gz ../SOURCES
 
 %setup -T -D
 
@@ -83,10 +84,10 @@ cat > local << EOF
 #
 #The default variables below are the base paths used by other scripts in
 #a local custom software distribution.
-export LOCAL_SW_ROOT=%{_prefix}
-export LOCAL_SW_ETC=/etc/opt/%{local_prefix}
-export LOCAL_SW_VAR=/var/opt/%{local_prefix}
-export LOCAL_SW_SCRIPT_LIBS=%{_libdir}/scripts
+LOCAL_SW_ROOT=%{_prefix}
+LOCAL_SW_ETC=/etc/opt/%{local_prefix}
+LOCAL_SW_VAR=/var/opt/%{local_prefix}
+LOCAL_SW_SCRIPT_LIBS=%{_libdir}/scripts
 
 EOF
 
