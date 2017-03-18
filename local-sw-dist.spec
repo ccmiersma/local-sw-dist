@@ -1,6 +1,6 @@
 %define author Christopher Miersma
 # This defines whether you've release this version. Increment it for small packaging changes within a stable release.
-%define default_rel_num 0
+%define default_rel_num 1
 Name:		local-sw-dist
 #Update the version to track changes to the specfile with major versions
 Version:        0.1.0
