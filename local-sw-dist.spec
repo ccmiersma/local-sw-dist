@@ -1,12 +1,15 @@
 %define author Christopher Miersma
-# This defines whether you've release this version. Increment it for small packaging changes within a stable release.
-%define default_rel_num 1
+
+# This defines the target stable release for a given version.
+#Increment it for small packaging changes within a stable release.
+#Reset it to 1, when you begin work on a new version, bugfix etc.
+%define rel_num 1
 Name:		local-sw-dist
 #Update the version to track changes to the specfile with major versions
-Version:        0.1.0
+Version:        0.1.1
 
 #The following parameters can be defined at the command line, but default as below.
-%{!?rel_num:%define rel_num %{default_rel_num}}
+%{!?rel:%define rel false}
 %{!?local_source:%define local_source false}
 %{!?tag:%define tag release-%{version}}
 
@@ -22,17 +25,15 @@ Version:        0.1.0
 %define _includedir %{_prefix}/include
 %endif
 
-#This automatically sets the release to 0 with a date stamped release candidate.
-#Set the release number to 1 or higher by defining rel_num.
-%if "%{rel_num}" == "%{default_rel_num}"
-Release:        %{rel_num}rc%(date +"%Y%m%d%H%M")%{?dist}
+#If this is not specifically defined as a release, the rel_num will be the upcoming release
+#minus 1 with rc and a date stamp. A clean release package for stable release can be defined
+#by passing "-D 'rel true'" If you need to re-release a package because of specfile or other
+#packaging issues, you must update the default rel_num in the specfile.
+%if "%{rel}" == "false"
+Release:        %(echo $((%{rel_num} - 1)))rc%(date +"%Y%m%d%H%M")%{?dist}
 %else
 Release:        %{rel_num}%{?dist}
 %endif
-
-
-
-
 
 
 Summary:	Local Software Distribution
