@@ -56,9 +56,12 @@ and custom applications local to your organization.
 # This section works to grab the source file from the git repository.
 # If you wish to build from a local tar file that you have downloaded or extracted
 # from the SRPM, run rpmbuild with -D 'local_source true'
-git archive --prefix=%{name}-%{version}/ --format tar %{tag} --remote %{vcsurl} | gzip > ../SOURCES/%{name}-%{version}.tar.gz
+git archive --prefix=%{name}-%{version}/ --format tar %{tag} --remote %{vcsurl} | gzip > %{name}-%{version}.tar.gz
 
-%setup
+tar xvfz %{name}-%{version}.tar.gz
+cp %{name}-%{version}.tar.gz ../SOURCES
+
+%setup -T -D
 
 %else
 # local_source is not false, so we build from local SOURCE0
