@@ -1,4 +1,5 @@
 %define author Christopher Miersma
+# This defines whether you've release this version. Increment it for small packaging changes within a stable release.
 %define default_rel_num 0
 Name:		local-base-sw-dist
 #Update the version to track changes to the specfile with major versions
@@ -23,7 +24,7 @@ Version:        0.1.0
 
 #This automatically sets the release to 0 with a date stamped release candidate.
 #Set the release number to 1 or higher by defining rel_num.
-%if "%{1?rel_num}" == "%{default_rel_num}"
+%if "%{rel_num}" == "%{default_rel_num}"
 Release:        %{rel_num}rc%(date +"%Y%m%d%H%M")%{?dist}
 %else
 Release:        %{rel_num}%{?dist}
