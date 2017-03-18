@@ -1,7 +1,7 @@
 %define author Christopher Miersma
 # This defines whether you've release this version. Increment it for small packaging changes within a stable release.
 %define default_rel_num 0
-Name:		local-base-sw-dist
+Name:		local-sw-dist
 #Update the version to track changes to the specfile with major versions
 Version:        0.1.0
 
@@ -35,7 +35,7 @@ Release:        %{rel_num}%{?dist}
 
 
 
-Summary:	Local Base Software Distribution
+Summary:	Local Software Distribution
 Group:		local
 License:	MIT
 URL:		https://www.gitlab.com/ccmiersma/%{name}/
@@ -91,7 +91,7 @@ export LOCAL_SW_SCRIPT_LIBS=%{_libdir}/scripts
 EOF
 
 
-echo "Building 
+echo "Building..." 
 cat > local.sh << EOF
 #Add local software distribution to PATH and set ENV variables.
 #
