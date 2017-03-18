@@ -35,7 +35,6 @@ Release:        %(echo $((%{rel_num} - 1)))rc%(date +"%Y%m%d%H%M")%{?dist}
 Release:        %{rel_num}%{?dist}
 %endif
 
-
 Summary:	Local Software Distribution
 Group:		local
 License:	MIT
@@ -72,9 +71,6 @@ mv -f %{name}-%{version}.tar.gz ../SOURCES
 
 %endif
 
-
-
-
 %build
 
 
@@ -109,15 +105,13 @@ source \${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
 
 EOF
 
-
 echo "Creating man page from README..."
 
 # If a README.md is found, create a man page
 if [ -e "README.md" ]; then
   cat README.md | \
-  sed -e 1i"\% %{name}(7)\n% %{author} \n% $(date +\%B\ \%Y)\n#NAME\n%{name} - %{summary}\n" | \
+  sed -e 1i"\%% %{name}(7)\n\%% %{author} \n\%% $(date +\%B\ \%Y)\n#NAME\n%{name} - %{summary}\n" | \
   pandoc -s -t man - | \
-  sed -e 3d | \
   gzip > %{name}.7.gz
 fi
 
@@ -184,7 +178,6 @@ find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed 
 %config %_sysconfdir/sysconfig/%{local_prefix}
 %config %_sysconfdir/opt/%{local_prefix}/base-sw-dist.conf
 %docdir %{_mandir} 
-
 
 # The post and postun update the man page database
 %post
