@@ -74,7 +74,7 @@ mv -f %{name}-%{version}.tar.gz ../SOURCES
 %build
 
 
-cat > local << EOF
+cat > local << "EOF"
 #Insert ENV variables that need to be processed first here.
 #Anything the script libraries depend on should go here.
 #Minor customizations of the environment should got in the post-library includes.
@@ -90,7 +90,7 @@ EOF
 
 
 echo "Building..." 
-cat > local.sh << EOF
+cat > local.sh << "EOF"
 #Add local software distribution to PATH and set ENV variables.
 #
 #Do not change parameters in this file. Use the sysconfig or conf files below.
@@ -98,9 +98,9 @@ cat > local.sh << EOF
 # Include the pre-config file. You can set global values here. Settings here will impact the main library of variables and functions.
 source /etc/sysconfig/%{local_prefix}
 
-source \${LOCAL_SW_SCRIPT_LIBS-/opt/local/lib/scripts}/base-sw-dist.lib.sh
+source ${LOCAL_SW_SCRIPT_LIBS-/opt/local/lib/scripts}/base-sw-dist.lib.sh
 
-source \${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
+source ${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
 
 EOF
 
