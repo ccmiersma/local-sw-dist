@@ -43,7 +43,7 @@ Source0:	%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  pandoc
 
-%define vcsurl ssh://git@gitlab.com:/ccmiersma/%{name}.git
+%define vcsurl git@gitlab.com:/ccmiersma/%{name}.git
 
 %description
 This package will install the base environment for a custom software distribution.
