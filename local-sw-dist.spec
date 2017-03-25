@@ -6,7 +6,7 @@
 %define rel_num 1
 Name:		local-sw-dist
 #Update the version to track changes to the specfile with major versions
-Version:        0.1.1
+Version:        0.2.0
 
 #The following parameters can be defined at the command line, but default as below.
 %{!?rel:%define rel false}
@@ -38,12 +38,12 @@ Release:        %{rel_num}%{?dist}
 Summary:	Local Software Distribution
 Group:		local
 License:	MIT
-URL:		https://www.gitlab.com/ccmiersma/%{name}/
+URL:		https://gitlab.com/ccmiersma/%{name}/
 Source0:	%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  pandoc
 
-%define vcsurl ssh://git@www.gitlab.com:/ccmiersma/%{name}.git
+%define vcsurl git@gitlab.com:/ccmiersma/%{name}.git
 
 %description
 This package will install the base environment for a custom software distribution.
@@ -74,7 +74,7 @@ mv -f %{name}-%{version}.tar.gz ../SOURCES
 %build
 
 
-cat > local << EOF
+cat > local << "EOF"
 #Insert ENV variables that need to be processed first here.
 #Anything the script libraries depend on should go here.
 #Minor customizations of the environment should got in the post-library includes.
@@ -90,7 +90,7 @@ EOF
 
 
 echo "Building..." 
-cat > local.sh << EOF
+cat > local.sh << "EOF"
 #Add local software distribution to PATH and set ENV variables.
 #
 #Do not change parameters in this file. Use the sysconfig or conf files below.
@@ -98,10 +98,9 @@ cat > local.sh << EOF
 # Include the pre-config file. You can set global values here. Settings here will impact the main library of variables and functions.
 source /etc/sysconfig/%{local_prefix}
 
+source ${LOCAL_SW_SCRIPT_LIBS-/opt/local/lib/scripts}/base-sw-dist.lib.sh
 
-source \${LOCAL_SW_SCRIPT_LIBS-/opt/local/lib/scripts}/base-sw-dist.lib.sh
-
-source \${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
+source ${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
 
 EOF
 
@@ -189,5 +188,7 @@ mandb
 mandb
 
 %changelog
+* Fri Mar 24 2017 Christopher Miersma - 0.2.0-1
+- Get all the variables covered properly and default to turning on.
 * Thu Jan 19 2017 Christopher Miersma - 0.1.0-1
 - Initial Release
