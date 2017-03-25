@@ -15,8 +15,6 @@ case "$1" in
     export LOCAL_SW_SCRIPT_LIBS
     export PATH=$PATH:$LOCAL_SW_ROOT/bin:$LOCAL_SW_ROOT/sbin
     export MANPATH=:$LOCAL_SW_ROOT/share/man
-    export LOCAL_HOSTNAME=$(hostname -s)
-    export LOCAL_FQDN=$(hostname -f)
     ;;
   unset)
     # Strip out PATH addition for /bin
@@ -33,8 +31,10 @@ case "$1" in
     export PATH=${PATH#:}
     
     unset MANPATH
-    ;;
-  get)
+    unset LOCAL_SW_ETC
+    unset LOCAL_SW_VAR
+    unset LOCAL_SW_SCRIPT_LIBS
+    unset LOCAL_SW_ROOT
     ;;
   path_override)
     export PATH=$LOCAL_SW_ROOT/bin:$LOCAL_SW_ROOT/sbin:$PATH
