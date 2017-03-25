@@ -6,7 +6,7 @@
 %define rel_num 1
 Name:		local-sw-dist
 #Update the version to track changes to the specfile with major versions
-Version:        0.1.1
+Version:        0.2.0
 
 #The following parameters can be defined at the command line, but default as below.
 %{!?rel:%define rel false}
@@ -98,7 +98,6 @@ cat > local.sh << EOF
 # Include the pre-config file. You can set global values here. Settings here will impact the main library of variables and functions.
 source /etc/sysconfig/%{local_prefix}
 
-
 source \${LOCAL_SW_SCRIPT_LIBS-/opt/local/lib/scripts}/base-sw-dist.lib.sh
 
 source \${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
@@ -189,5 +188,7 @@ mandb
 mandb
 
 %changelog
+* Fri Mar 24 2017 Christopher Miersma - 0.2.0-1
+- Get all the variables covered properly and default to turning on.
 * Thu Jan 19 2017 Christopher Miersma - 0.1.0-1
 - Initial Release
