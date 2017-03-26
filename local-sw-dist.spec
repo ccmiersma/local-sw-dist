@@ -6,7 +6,7 @@
 %define rel_num 1
 Name:		local-sw-dist
 #Update the version to track changes to the specfile with major versions
-Version:        0.2.0
+Version:        0.2.1
 
 #The following parameters can be defined at the command line, but default as below.
 %{!?rel:%define rel false}
@@ -130,6 +130,7 @@ mkdir -p ${RPM_BUILD_ROOT}/var/opt/%{local_prefix}
 
 mkdir -p ${RPM_BUILD_ROOT}%_mandir/man7
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/app
+mkdir -p ${RPM_BUILD_ROOT}%_prefix/webapps
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/lib64
 mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/
 
@@ -173,6 +174,7 @@ find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed 
 %dir /var/opt/%{local_prefix}
 %dir %_mandir/man7
 %dir %_prefix/app
+%dir %_prefix/webapps
 %dir %_prefix/lib64
 %config %_sysconfdir/sysconfig/%{local_prefix}
 %config %_sysconfdir/opt/%{local_prefix}/base-sw-dist.conf
@@ -188,6 +190,8 @@ mandb
 mandb
 
 %changelog
+* Sat Mar 25 2017 Christopher Miersma - 0.2.1-1
+- Add webapps folder
 * Fri Mar 24 2017 Christopher Miersma - 0.2.0-1
 - Get all the variables covered properly and default to turning on.
 * Thu Jan 19 2017 Christopher Miersma - 0.1.0-1
