@@ -1,0 +1,10 @@
+#Insert ENV variables that need to be processed first here.
+#Anything the script libraries depend on should go here.
+#Minor customizations of the environment should got in the post-library includes.
+#
+#The default variables below are the base paths used by other scripts in
+#a local custom software distribution.
+LOCAL_SW_ROOT=/opt/local
+LOCAL_SW_ETC=/etc/opt/local
+LOCAL_SW_VAR=/var/opt/local
+LOCAL_SW_SCRIPT_LIBS=/opt/local/lib/scripts
