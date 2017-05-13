@@ -6,7 +6,7 @@
 %define rel_num 1
 Name:		local-sw-dist
 #Update the version to track changes to the specfile with major versions
-Version:        0.2.1
+Version:        0.3.0
 
 #The following parameters can be defined at the command line, but default as below.
 %{!?rel:%define rel false}
@@ -73,20 +73,6 @@ mv -f %{name}-%{version}.tar.gz ../SOURCES
 
 %build
 
-
-cat > local << "EOF"
-#Insert ENV variables that need to be processed first here.
-#Anything the script libraries depend on should go here.
-#Minor customizations of the environment should got in the post-library includes.
-#
-#The default variables below are the base paths used by other scripts in
-#a local custom software distribution.
-LOCAL_SW_ROOT=%{_prefix}
-LOCAL_SW_ETC=/etc/opt/%{local_prefix}
-LOCAL_SW_VAR=/var/opt/%{local_prefix}
-LOCAL_SW_SCRIPT_LIBS=%{_libdir}/scripts
-
-EOF
 
 
 echo "Building..." 
