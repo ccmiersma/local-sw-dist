@@ -74,22 +74,6 @@ mv -f %{name}-%{version}.tar.gz ../SOURCES
 %build
 
 
-
-echo "Building..." 
-cat > local.sh << "EOF"
-#Add local software distribution to PATH and set ENV variables.
-#
-#Do not change parameters in this file. Use the sysconfig or conf files below.
-#
-# Include the pre-config file. You can set global values here. Settings here will impact the main library of variables and functions.
-source /etc/sysconfig/%{local_prefix}
-
-source ${LOCAL_SW_SCRIPT_LIBS-/opt/local/lib/scripts}/base-sw-dist.lib.sh
-
-source ${LOCAL_SW_ETC-/etc/opt/local}/base-sw-dist.conf
-
-EOF
-
 echo "Creating man page from README..."
 
 # If a README.md is found, create a man page
@@ -122,16 +106,14 @@ mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/
 
 
 #Pre-config file in sysconfig.
-cp local ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/%{local_prefix}
+cp environment ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/local/environment
 
 # The script library with all the defaults
-cp base-sw-dist.lib.sh ${RPM_BUILD_ROOT}%_libdir/scripts/
+cp local-sw-dist.lib.sh ${RPM_BUILD_ROOT}%_libdir/scripts/
 
-# The post-library configuration 
-cp base-sw-dist.conf ${RPM_BUILD_ROOT}%_sysconfdir/opt/%{local_prefix}/base-sw-dist.conf
 
 # The glue that holds it together outside the root.
-cp local.sh ${RPM_BUILD_ROOT}/etc/profile.d/%{local_prefix}.sh
+cp local.sh ${RPM_BUILD_ROOT}/etc/profile.d/
 
 
 cp %{name}.7.gz ${RPM_BUILD_ROOT}%_mandir/man7/
@@ -157,13 +139,14 @@ find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed 
 %dir %_libexecdir 
 %dir %_includedir
 %dir %_sysconfdir/opt/%{local_prefix}/
+%dir %_sysconfdir/sysconfig/local/
 %dir /var/opt/%{local_prefix}
 %dir %_mandir/man7
 %dir %_prefix/app
 %dir %_prefix/webapps
 %dir %_prefix/lib64
-%config %_sysconfdir/sysconfig/%{local_prefix}
-%config %_sysconfdir/opt/%{local_prefix}/base-sw-dist.conf
+%config(noreplace) %_sysconfdir/sysconfig/local/environment
+%config(replace) %_sysconfdir/profile.d/local.sh
 %docdir %{_mandir} 
 
 # The post and postun update the man page database
@@ -176,6 +159,8 @@ mandb
 mandb
 
 %changelog
+* Sat Mar 25 2017 Christopher Miersma - 0.3.0-1
+- Simplified script and config structure.
 * Sat Mar 25 2017 Christopher Miersma - 0.2.1-1
 - Add webapps folder
 * Fri Mar 24 2017 Christopher Miersma - 0.2.0-1
