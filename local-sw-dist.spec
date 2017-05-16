@@ -102,7 +102,7 @@ mkdir -p ${RPM_BUILD_ROOT}%_mandir/man7
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/app
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/webapps
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/lib64
-mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/
+mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/local
 
 
 #Pre-config file in sysconfig.
@@ -146,7 +146,7 @@ find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed 
 %dir %_prefix/webapps
 %dir %_prefix/lib64
 %config(noreplace) %_sysconfdir/sysconfig/local/environment
-%config(replace) %_sysconfdir/profile.d/local.sh
+%config %_sysconfdir/profile.d/local.sh
 %docdir %{_mandir} 
 
 # The post and postun update the man page database

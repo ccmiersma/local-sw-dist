@@ -48,6 +48,8 @@ case "$1" in
     export MANPATH=$LOCAL_SW_ROOT/share/man:
     ;;
   *)
+    echo "The following LOCAL environmental variables are defined."
+    env | grep LOCAL_*
     ;;
 
 esac
