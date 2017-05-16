@@ -16,10 +16,11 @@ case "$1" in
     LOCAL_SW_ETC=${LOCAL_SW_ETC:-/etc/opt/local}
     LOCAL_SW_VAR=${LOCAL_SW_VAR:-/var/opt/local}
     LOCAL_SW_SCRIPT_LIBS=${LOCAL_SW_SCRIPT_LIBS:-/opt/local/lib/scripts}
-
-    export LOCAL_SW_ETC
-    export LOCAL_SW_VAR
-    export LOCAL_SW_SCRIPT_LIBS
+    
+    for local_variable in $(set | grep ^LOCAL_ | cut -f1 -d=)
+    do
+      export $local_variable
+    done
     export PATH=$PATH:$LOCAL_SW_ROOT/bin:$LOCAL_SW_ROOT/sbin
     export MANPATH=:$LOCAL_SW_ROOT/share/man
     ;;
@@ -38,10 +39,11 @@ case "$1" in
     export PATH=${PATH#:}
     
     unset MANPATH
-    unset LOCAL_SW_ETC
-    unset LOCAL_SW_VAR
-    unset LOCAL_SW_SCRIPT_LIBS
-    unset LOCAL_SW_ROOT
+    
+    for local_variable in $(set | grep ^LOCAL_ | cut -f1 -d=)
+    do
+      unset $local_variable
+    done
     ;;
   path_override)
     export PATH=$LOCAL_SW_ROOT/bin:$LOCAL_SW_ROOT/sbin:$PATH
