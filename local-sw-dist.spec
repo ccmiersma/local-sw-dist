@@ -17,7 +17,7 @@
 
 Name:		local-sw-dist
 Version:        0.3.1
-Release:        1%{?local_prefix:-local_prefix}%{?dist}
+Release:        1%{?local_prefix:-local}%{?dist}
 
 Summary:	Local Software Distribution
 Group:		local
