@@ -92,7 +92,7 @@ cp README.md ${RPM_BUILD_ROOT}%_docdir/
 
 
 # This automatically builds a file list from files and symlinks.
-find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed -e "s#\(.*\)#\"\1\"#" > %{name}-filelist
+#find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed -e "s#\(.*\)#\"\1\"#" > %{name}-filelist
 
 %clean
 %__rm -rf ${RPM_BUILD_ROOT}
