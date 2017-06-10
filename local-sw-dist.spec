@@ -90,14 +90,13 @@ cp README.md ${RPM_BUILD_ROOT}%_docdir/
 
 # This automatically builds a file list from files and symlinks.
 #find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed -e "s#\(.*\)#\"\1\"#" > %{name}-filelist
+/usr/lib/rpm/check-files ${RPM_BUILD_ROOT} > %{name}-filelist
 
 %clean
 %__rm -rf ${RPM_BUILD_ROOT}
 #%__rm -rf %_builddir/*
 
-#%files -f %{name}-filelist
-%files
-%_prefix
+%files -f %{name}-filelist
 %defattr(-,root,root, -)
 %dir %_prefix
 %dir %_datadir
