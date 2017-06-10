@@ -1,9 +1,6 @@
 %define author Christopher Miersma
 
 
-%{!?local_source:%define local_source false}
-%{!?tag:%define tag release-%{version}}
-
 %{!?local_prefix:%define local_prefix local}
 %if "%{local_prefix}" != "false"
 %define _prefix /opt/%{local_prefix}
@@ -100,6 +97,7 @@ cp README.md ${RPM_BUILD_ROOT}%_docdir/
 
 #%files -f %{name}-filelist
 %files
+%_prefix
 %defattr(-,root,root, -)
 %dir %_prefix
 %dir %_datadir
