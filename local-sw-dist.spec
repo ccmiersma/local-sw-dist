@@ -98,7 +98,8 @@ cp README.md ${RPM_BUILD_ROOT}%_docdir/
 %__rm -rf ${RPM_BUILD_ROOT}
 #%__rm -rf %_builddir/*
 
-%files -f %{name}-filelist
+#%files -f %{name}-filelist
+%files
 %defattr(-,root,root, -)
 %dir %_prefix
 %dir %_datadir
