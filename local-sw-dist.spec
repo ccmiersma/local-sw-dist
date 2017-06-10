@@ -16,7 +16,7 @@
 %endif
 
 Name:		local-sw-dist
-Version:        0.3.1
+Version:        0.3.2
 Release:        1%{?local_prefix:.%local_prefix}%{?dist}
 
 Summary:	Local Software Distribution
@@ -138,6 +138,21 @@ mandb
 mandb
 
 %changelog
+* Sat Jun 10 2017 Christopher Miersma <ccmiersma@gmail.com> 0.3.2-1.local
+- New standards for local versioning. (ccmiersma@gmail.com)
+- New standards for local versioning. (ccmiersma@gmail.com)
+- New standards for local versioning. (ccmiersma@gmail.com)
+- New standards for local versioning. (ccmiersma@gmail.com)
+- New standards for local versioning. (ccmiersma@gmail.com)
+- New files list. (ccmiersma@gmail.com)
+- New files list. (ccmiersma@gmail.com)
+- New auto files list. (ccmiersma@gmail.com)
+- New approach to files list. (ccmiersma@gmail.com)
+- New approach to files list. (ccmiersma@gmail.com)
+- New approach to files list. (ccmiersma@gmail.com)
+- New approach to files list. (ccmiersma@gmail.com)
+- New approach to files list. (ccmiersma@gmail.com)
+
 * Fri Jun 09 2017 Christopher Miersma <ccmiersma@gmail.com> 0.3.1-1
 - new package built with tito
 
