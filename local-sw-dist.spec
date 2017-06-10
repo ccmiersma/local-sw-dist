@@ -119,7 +119,8 @@ find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed 
 %dir %_prefix/lib64
 %config(noreplace) %_sysconfdir/sysconfig/local/environment
 %config %_sysconfdir/profile.d/local.sh
-%docdir %{_mandir} 
+%docdir %{_mandir}
+%docdir %{_docdir}
 
 # The post and postun update the man page database
 %post
