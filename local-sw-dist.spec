@@ -8,6 +8,7 @@
 %if "%{local_prefix}" != "false"
 %define _prefix /opt/%{local_prefix}
 %define _datadir %{_prefix}/share
+%define _docdir %{_datadir}/doc
 %define _mandir %{_datadir}/man
 %define _bindir %{_prefix}/bin
 %define _sbindir %{_prefix}/sbin
@@ -56,6 +57,7 @@ fi
 
 mkdir -p ${RPM_BUILD_ROOT}%_prefix
 mkdir -p ${RPM_BUILD_ROOT}%_datadir
+mkdir -p ${RPM_BUILD_ROOT}%_docdir
 mkdir -p ${RPM_BUILD_ROOT}%_mandir
 mkdir -p ${RPM_BUILD_ROOT}%_bindir
 mkdir -p ${RPM_BUILD_ROOT}%_sbindir
@@ -86,6 +88,7 @@ cp local.sh ${RPM_BUILD_ROOT}/etc/profile.d/
 
 cp %{name}.7.gz ${RPM_BUILD_ROOT}%_mandir/man7/
 
+cp README.md ${RPM_BUILD_ROOT}%_docdir/
 
 
 # This automatically builds a file list from files and symlinks.
@@ -99,6 +102,7 @@ find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed 
 %defattr(-,root,root, -)
 %dir %_prefix
 %dir %_datadir
+%dir %_docdir
 %dir %_mandir
 %dir %_bindir
 %dir %_sbindir
