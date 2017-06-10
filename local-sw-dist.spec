@@ -1,15 +1,6 @@
 %define author Christopher Miersma
 
-# This defines the target stable release for a given version.
-#Increment it for small packaging changes within a stable release.
-#Reset it to 1, when you begin work on a new version, bugfix etc.
-%define rel_num 1
-Name:		local-sw-dist
-#Update the version to track changes to the specfile with major versions
-Version:        0.3.0
 
-#The following parameters can be defined at the command line, but default as below.
-%{!?rel:%define rel false}
 %{!?local_source:%define local_source false}
 %{!?tag:%define tag release-%{version}}
 
@@ -25,15 +16,9 @@ Version:        0.3.0
 %define _includedir %{_prefix}/include
 %endif
 
-#If this is not specifically defined as a release, the rel_num will be the upcoming release
-#minus 1 with rc and a date stamp. A clean release package for stable release can be defined
-#by passing "-D 'rel true'" If you need to re-release a package because of specfile or other
-#packaging issues, you must update the default rel_num in the specfile.
-%if "%{rel}" == "false"
-Release:        %(echo $((%{rel_num} - 1)))rc%(date +"%Y%m%d%H%M")%{?dist}
-%else
-Release:        %{rel_num}%{?dist}
-%endif
+Name:		local-sw-dist
+Version:        0.3.0
+Release:        1%{?dist}
 
 Summary:	Local Software Distribution
 Group:		local
@@ -43,33 +28,16 @@ Source0:	%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  pandoc
 
-%define vcsurl git@gitlab.com:/ccmiersma/%{name}.git
 
 %description
 This package will install the base environment for a custom software distribution.
 This can serve as a starting point for a complete integrated set of scripts, configurations,
 and custom applications local to your organization.
 
+
 %prep
-%if "%{local_source}" == "false"
-
-# This section works to grab the source file from the git repository.
-# If you wish to build from a local tar file that you have downloaded or extracted
-# from the SRPM, run rpmbuild with -D 'local_source true'
-rm -rf ./%{name}-%{version}/
-git archive --prefix=%{name}-%{version}/ --format tar %{tag} --remote %{vcsurl} | gzip > %{name}-%{version}.tar.gz
-
-tar xvfz %{name}-%{version}.tar.gz
-mv -f %{name}-%{version}.tar.gz ../SOURCES
-
-%setup -T -D
-
-%else
-# local_source is not false, so we build from local SOURCE0
-# By default local_source is false, so we skip this.
 %setup
 
-%endif
 
 %build
 
