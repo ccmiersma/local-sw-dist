@@ -114,7 +114,7 @@ cat > %{name}-defined-files-list << EOF
 EOF
 find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed -e "s#\(.*\)#\"\1\"#" > %{name}-all-files-list
 cat %{name}-defined-files-list | cut -f2 -d' ' | sed -e "s#\(.*\)#\"\1\"#" | sort > %{name}-defined-files-list.tmp
-cat %{name}-all-files-list | sort %{name}-auto-files-list.tmp
+cat %{name}-all-files-list | sort > %{name}-auto-files-list.tmp
 diff -e %{name}-defined-files-list.tmp %{name}-auto-files-list.tmp | grep "^\"" > %{name}-auto-files-list
 cat %{name}-defined-files-list %{name}-auto-files-list > %{name}-files-list
 
