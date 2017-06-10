@@ -18,7 +18,7 @@
 %endif
 
 Name:		local-sw-dist
-Version:        0.3.0
+Version:        0.3.1
 Release:        1%{?dist}
 
 Summary:	Local Software Distribution
@@ -132,6 +132,9 @@ mandb
 mandb
 
 %changelog
+* Fri Jun 09 2017 Christopher Miersma <ccmiersma@gmail.com> 0.3.1-1
+- new package built with tito
+
 * Sat Mar 25 2017 Christopher Miersma - 0.3.0-1
 - Simplified script and config structure.
 * Sat Mar 25 2017 Christopher Miersma - 0.2.1-1
