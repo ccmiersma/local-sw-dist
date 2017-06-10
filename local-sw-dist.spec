@@ -89,8 +89,7 @@ cp README.md ${RPM_BUILD_ROOT}%_docdir/
 
 
 # This automatically builds a file list from files and symlinks.
-cat > %{name}-defined-files << EOF
-%defattr(-,root,root, -)
+cat > %{name}-defined-files-list << EOF
 %dir %_prefix
 %dir %_datadir
 %dir %_docdir
@@ -113,34 +112,16 @@ cat > %{name}-defined-files << EOF
 %docdir %{_mandir}
 %docdir %{_docdir}
 EOF
-find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed -e "s#\(.*\)#\"\1\"#" > %{name}-filelist
+find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed -e "s#\(.*\)#\"\1\"#" > %{name}-all-files-list
+diff -e <(cat %{name}-defined-files-list | cut -f2 -d' ' | sed -e "s#\(.*\)#\"\1\"#" | sort) <(cat %{name}-all-files-list | sort) | grep "^\"" > %{name}-auto-files-list
+cat %{name}-defined-files-list %{name}-auto-files-list > %{name}-files-list
 
 %clean
 %__rm -rf ${RPM_BUILD_ROOT}
 
-%files -f %{name}-filelist
+%files -f %{name}-files-list
 %defattr(-,root,root, -)
-%dir %_prefix
-%dir %_datadir
-%dir %_docdir
-%dir %_mandir
-%dir %_bindir
-%dir %_sbindir
-%dir %_libdir
-%dir %_libdir/scripts
-%dir %_libexecdir 
-%dir %_includedir
-%dir %_sysconfdir/opt/%{local_prefix}/
-%dir %_sysconfdir/sysconfig/local/
-%dir /var/opt/%{local_prefix}
-%dir %_mandir/man7
-%dir %_prefix/app
-%dir %_prefix/webapps
-%dir %_prefix/lib64
-%config(noreplace) %_sysconfdir/sysconfig/local/environment
-%config %_sysconfdir/profile.d/local.sh
-%docdir %{_mandir}
-%docdir %{_docdir}
+
 
 # The post and postun update the man page database
 %post
