@@ -4,6 +4,7 @@
 %{!?local_prefix:%define local_prefix local}
 %if "%{local_prefix}" != "false"
 %define _prefix /opt/%{local_prefix}
+%define _sysconfdir /etc/%{_prefix}
 %define _datadir %{_prefix}/share
 %define _docdir %{_datadir}/doc
 %define _mandir %{_datadir}/man
@@ -16,7 +17,7 @@
 
 Name:		local-sw-dist
 Version:        0.3.1
-Release:        1%{?dist}
+Release:        1%{?dist}%{?local_prefix}
 
 Summary:	Local Software Distribution
 Group:		local
@@ -61,19 +62,19 @@ mkdir -p ${RPM_BUILD_ROOT}%_sbindir
 mkdir -p ${RPM_BUILD_ROOT}%_libdir/scripts
 mkdir -p ${RPM_BUILD_ROOT}%_libexecdir 
 mkdir -p ${RPM_BUILD_ROOT}%_includedir 
-mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/profile.d/ 
-mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/opt/%{local_prefix}/
+mkdir -p ${RPM_BUILD_ROOT}/etc/profile.d/ 
+mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/
 mkdir -p ${RPM_BUILD_ROOT}/var/opt/%{local_prefix}
 
 mkdir -p ${RPM_BUILD_ROOT}%_mandir/man7
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/app
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/webapps
 mkdir -p ${RPM_BUILD_ROOT}%_prefix/lib64
-mkdir -p ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/local
+mkdir -p ${RPM_BUILD_ROOT}/etc/sysconfig/local
 
 
 #Pre-config file in sysconfig.
-cp environment ${RPM_BUILD_ROOT}%_sysconfdir/sysconfig/local/environment
+cp environment ${RPM_BUILD_ROOT}/etc/sysconfig/local/environment
 
 # The script library with all the defaults
 cp local-sw-dist.lib.sh ${RPM_BUILD_ROOT}%_libdir/scripts/
@@ -88,7 +89,8 @@ cp %{name}.7.gz ${RPM_BUILD_ROOT}%_mandir/man7/
 cp README.md ${RPM_BUILD_ROOT}%_docdir/
 
 
-# This automatically builds a file list from files and symlinks.
+#Manually defined files and dirs that need special designation.
+#This will end up in the files section.
 cat > %{name}-defined-files-list << EOF
 %dir %_prefix
 %dir %_datadir
@@ -100,18 +102,19 @@ cat > %{name}-defined-files-list << EOF
 %dir %_libdir/scripts
 %dir %_libexecdir 
 %dir %_includedir
-%dir %_sysconfdir/opt/%{local_prefix}/
-%dir %_sysconfdir/sysconfig/local/
+%dir %_sysconfdir/
+%dir /etc/sysconfig/local/
 %dir /var/opt/%{local_prefix}
 %dir %_mandir/man7
 %dir %_prefix/app
 %dir %_prefix/webapps
 %dir %_prefix/lib64
-%config(noreplace) %_sysconfdir/sysconfig/local/environment
-%config %_sysconfdir/profile.d/local.sh
+%config(noreplace) /etc/sysconfig/local/environment
+%config /etc/profile.d/local.sh
 %docdir %{_mandir}
 %docdir %{_docdir}
 EOF
+#Convoluted stuff to combine the manual list above with any new files we find, into a correct list with no duplicates
 find ${RPM_BUILD_ROOT} -type f -o -type l | sed -e "s#${RPM_BUILD_ROOT}##g"|sed -e "s#\(.*\)#\"\1\"#" > %{name}-all-files-list
 cat %{name}-defined-files-list | cut -f2 -d' ' | sed -e "s#\(.*\)#\"\1\"#" | sort > %{name}-defined-files-list.tmp
 cat %{name}-all-files-list | sort > %{name}-auto-files-list.tmp
